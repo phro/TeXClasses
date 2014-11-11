@@ -7,6 +7,7 @@
 \RequirePackage{mathtools} % Used for norm/absolute value/cardinality, includes amsmath
 \RequirePackage{amssymb}
 \RequirePackage{amsthm}
+\RequirePackage{fancyref}
 
 \DeclarePairedDelimiter\abs{\lvert}{\rvert}
 \DeclarePairedDelimiter\norm{\lVert}{\rVert}
@@ -19,11 +20,16 @@
 \let\oldnorm\norm
 \def\norm{\@ifstar{\oldnorm}{\oldnorm*}}
 
+\delimitershortfall-1sp % Allow automatic growth of delimiters
+
 
 \newcounter{questionCounter}
-\newcounter{caseCounter}[questionCounter] %The second argument causes first counter to be reset upon the incrementation of the second
+\newcounter{thmCounter}
+% Reset the case counter during new questions
+\newcounter{caseCounter}[questionCounter]
 
-\newtheorem{lem}{Lemma}
+\newtheorem{thm}[thmCounter]{Theorem}
+\newtheorem{lem}[thmCounter]{Lemma}
 \theoremstyle{remark}
 \newtheorem{case}[caseCounter]{Case}
 \theoremstyle{definition}
@@ -32,6 +38,7 @@
 \newcommand{\Q}{\mathbb{Q}}
 \newcommand{\Z}{\mathbb{Z}}
 \newcommand{\gen}[1]{\left \langle #1\right \rangle} % Used for generating sets.
+\newcommand{\set}[1]{\left \{ #1 \right \}} % Generate a set
 \DeclareMathOperator{\sgn}{sgn}
 \DeclareMathOperator{\ord}{ord}
 
