@@ -8,7 +8,8 @@
 \RequirePackage{mathtools} % Used for norm/absolute value/cardinality, includes amsmath
 \RequirePackage{amssymb}
 \RequirePackage{amsthm}
-%\RequirePackage{nath}
+\RequirePackage{varioref}
+\RequirePackage{cleveref}
 
 \DeclarePairedDelimiter\abs{\lvert}{\rvert}
 \DeclarePairedDelimiter\norm{\lVert}{\rVert}
