@@ -24,10 +24,11 @@
 \delimitershortfall-1sp % Allow automatic growth of delimiters
 
 \newcounter{questionCounter}
+\newcounter{thmCounter}
 \newcounter{caseCounter}[questionCounter] %The second argument causes first counter to be reset upon the incrementation of the second
 
-\newtheorem{thm}[thmCounter]{Theorem}
-\newtheorem{lem}[thmCounter]{Lemma}
+\newtheorem{thm}{Theorem}
+\newtheorem{lem}[thm]{Lemma}
 \theoremstyle{remark}
 \newtheorem{case}[caseCounter]{Case}
 \theoremstyle{definition}
@@ -44,6 +45,11 @@
 \newcommand{\e}{\varepsilon}
 \newcommand{\inner}[2]{\left \langle #1, #2 \right \rangle}
 \newcommand{\set}[1]{\left \{ #1 \right \}}
+
+\newcommand{\pd}[2]{\frac {\partial #1} {\partial #2}}
+\newcommand{\ppd}[3]{\frac { \partial^{#1}{#2} } {#3} }
+
+\DeclareMathOperator{\dom}{dom}
 
 % Basic R^N topology
 \newcommand{\cl}[1]{\overline{#1}} % Used to denote the closure of a set
