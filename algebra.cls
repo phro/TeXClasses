@@ -25,12 +25,13 @@
 
 
 \newcounter{questionCounter}
-\newcounter{thmCounter}
 % Reset the case counter during new questions
 \newcounter{caseCounter}[questionCounter]
 
-\newtheorem{thm}[thmCounter]{Theorem}
-\newtheorem{lem}[thmCounter]{Lemma}
+\newtheorem{thm}{Theorem}
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{cor}{Corollary}[thm]
+
 \theoremstyle{remark}
 \newtheorem{case}[caseCounter]{Case}
 \theoremstyle{definition}
@@ -39,7 +40,11 @@
 \newcommand{\Q}{\mathbb{Q}}
 \newcommand{\Z}{\mathbb{Z}}
 \newcommand{\gen}[1]{\left \langle #1\right \rangle} % Used for generating sets.
-\newcommand{\set}[1]{\left \{ #1 \right \}} % Generate a set
+\newcommand{\set}[1]{\left \{ #1 \right \}} % Surround in braces.
+\newcommand{\inv}[1]{#1^{-1}} % Invert something
+\newcommand{\nsg}{\triangleleft} % Normal subgroup shortcut
+\newcommand{\G}{\mathcal G} % I don't know if this would be used enough to be justified.
+\newcommand{\idx}[2]{\left [ #1 : #2 \right ]} % For the index of a group. Is this overkill?
 \DeclareMathOperator{\sgn}{sgn}
 \DeclareMathOperator{\ord}{ord}
 
