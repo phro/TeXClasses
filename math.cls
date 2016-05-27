@@ -21,6 +21,12 @@
 \let\oldnorm\norm
 \def\norm{\@ifstar{\oldnorm}{\oldnorm*}}
 
+% Remove the undesired spaces introduced when \left and \right are used.
+\let\originalleft\left
+\let\originalright\right
+\renewcommand{\left}{\mathopen{}\mathclose\bgroup\originalleft}
+\renewcommand{\right}{\aftergroup\egroup\originalright}
+
 \delimitershortfall-1sp % Allow automatic growth of delimiters
 
 
