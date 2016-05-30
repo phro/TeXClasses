@@ -73,6 +73,7 @@
 \newcommand{\inner}[2]{\left \langle #1, #2 \right \rangle}
 \newcommand{\se}[1]{\left \{ #1 \right \}}
 \newcommand{\pn}[1]{\left ( #1 \right )}
+\newcommand{\bk}[1]{\left [ #1 \right ]}
 
 \newcommand{\pd}[2]{\frac {\partial #1} {\partial #2}}
 \newcommand{\ppd}[3]{\frac { \partial^{#1}{#2} } {#3} }
