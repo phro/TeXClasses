@@ -78,7 +78,7 @@
 \newcommand{\pd}[2]{\frac {\partial #1} {\partial #2}}
 \newcommand{\ppd}[3]{\frac { \partial^{#1}{#2} } {#3} }
 
-\DeclareMathOperator{\dom}{dom}
+\DeclareMathOperator{\dom}{dom} % Domain
 
 % Basic R^N topology
 \newcommand{\cl}[1]{\overline{#1}} % Used to denote the closure of a set
@@ -87,3 +87,4 @@
 %\newcommand{\pball}[2]{\dot{B}_{#1}\left(#2 \right )} % The punctured ball
 
 \endinput
+% ex: filetype=tex
