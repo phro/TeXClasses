@@ -34,8 +34,14 @@
 % Reset the case counter during new questions
 \newcounter{caseCounter}[questionCounter]
 
+% \newtheorem {refrence name}
+%             [counter name (default ref. name)]
+%             {display name}
+%             [numberby section]
 \newtheorem{thm}{Theorem}
 \newtheorem{lem}[thm]{Lemma}
+\newtheorem{claim}[thm]{Claim}
+\newtheorem{prop}[thm]{Proposition}
 \newtheorem{cor}{Corollary}[thm]
 
 \theoremstyle{remark}
@@ -59,6 +65,10 @@
 \DeclareMathOperator{\Sl}{\mathfrak{sl}}
 \DeclareMathOperator{\SO}{SO}
 \DeclareMathOperator{\So}{\mathfrak{so}}
+
+% How does one renew a math operator?
+%\DeclareMathOperator{\Re}{Re}
+%\DeclareMathOperator{\Im}{Im}
 
 \newcommand{\gen}[1]{\left \langle #1\right \rangle} % Used for generating sets.
 \newcommand{\set}[1]{\left \{ #1 \right \}} % Surround in braces.
