@@ -1,5 +1,6 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{math}[2017/10/05 Author: Jesse Frohlich; Custom Style for math documents]
+\ProvidesPackage{math}[2017/10/05 Author: Jesse Frohlich; Custom Style for math
+documents]
 
 %\LoadClass[10pt,a4paper]{article}
 \LoadClass[11pt,letterpaper]{article} % Is this what you want? Maybe...
@@ -17,16 +18,35 @@
 \RequirePackage{amsthm}
 %\RequirePackage{hyperref}
 \RequirePackage{varioref}
+\RequirePackage{wrapfig}
+
 \RequirePackage[noabbrev]{cleveref}
+%\crefdefaultlabelformat{(#2#1#3)}
+\crefformat{enumi}{(#2#1#3)}
+\crefrangeformat{enumi}{(#3#1#4) to~(#5#2#6)}
+\crefmultiformat{enumi}{(#2#1#3)}%
+{,~(#2#1#3)}{,~(#2#1#3)}{,~(#2#1#3)}
+\ProvideDocumentCommand{\pfimplies}{m m}
+{$\text{\cref{#1}}\Rightarrow\text{\cref{#2}}$} % Use for TFAE's
+
 \RequirePackage[normalem]{ulem}
 \RequirePackage{csquotes}            % smart quotes
-\RequirePackage{enumerate}           % Custom enumeration themes
+%\RequirePackage{enumerate}           % Custom enumeration themes
+\RequirePackage[shortlabels]{enumitem}           % Custom enumeration themes
 \RequirePackage{multicol}
 \RequirePackage{textgreek}           % "sigma-algebra"
 \RequirePackage{tikz-cd}             % Commutative diagrams
 \RequirePackage{bbm}                 % Blackboard bold 1
 \RequirePackage{bm}                  % Blackboard bold 1
-%\RequirePackage{txfonts}             % We want the \nll symbol
+
+% Make matrices squish better?
+%\RequirePackage[nodisplayskipstretch]{setspace}
+%\everydisplay\expandafter{\the\everydisplay\setstretch{1}}% return to singlespacing
+
+%\RequirePackage{mdframed}           % Framed environments
+\RequirePackage{tcolorbox}           % Framed environments
+\tcbuselibrary{breakable}
+%\RequirePackage{txfonts}            % We want the \nll symbol
 
 % Use this form with latex or pdflatex to include inline LaTeX code by default:
 \usepackage[inline]{asymptote}
@@ -95,34 +115,47 @@
 \newtheorem{defn}[thm]{Definition}
 \newtheorem{eg}[thm]{Example}
 \newtheorem{ex}[thm]{Exercise}
+\newtheorem*{solution}{Solution}
 \newtheorem{prob}[thm]{Problem}
 \newtheorem*{prob*}{Problem}
 \newtheorem{rem}[thm]{Remark}
 %\newtheorem{q}[questionCounter]{Exercise}
 
+\newenvironment{sol}
+  {\begin{tcolorbox}[breakable]\begin{solution}}
+  {\end{solution}\end{tcolorbox}}
+
 \ProvideDocumentCommand{\salg}{}{\textsigma-algebra}
 \ProvideDocumentCommand{\sfin}{}{\textsigma-finite}
 
+\ProvideDocumentCommand{\Ct}{O{\infty}}{C^#1}
+\ProvideDocumentCommand{\Cc}{O{\infty}}{C^#1_{\text c}}
+
 %\ProvideDocumentCommand{\alev}{}{a.e.\ }
 %\newcommand{\salg}{$\sigma$-algebra}
-
-% Standard number fields.
-\ProvideDocumentCommand{\N  }{}{\mathbb{N}} % Natural
-\ProvideDocumentCommand{\Z  }{}{\mathbb{Z}} % Integer
-\ProvideDocumentCommand{\Q  }{}{\mathbb{Q}} % Rational
-\ProvideDocumentCommand{\R  }{}{\mathbb{R}} % Real
-\ProvideDocumentCommand{\C  }{}{\mathbb{C}} % Complex
-\ProvideDocumentCommand{\K  }{}{\mathbb{K}} % Generic
-\ProvideDocumentCommand{\HH }{}{\mathbb{H}} % Upper-half plane/Quaternion
-\ProvideDocumentCommand{\del}{}{\partial}
 
 \ProvideDocumentCommand{\mcl}{m}{\mathcal{#1}}
 \ProvideDocumentCommand{\mbb}{m}{\mathbb{#1}}
 \ProvideDocumentCommand{\msc}{m}{\mathscr{#1}}
 \ProvideDocumentCommand{\mfk}{m}{\mathfrak{#1}}
+\ProvideDocumentCommand{\mit}{m}{\mathit{#1}}
+
+% Standard number fields.
+\ProvideDocumentCommand{\N  }{}{\mbb{N}} % Natural
+\ProvideDocumentCommand{\Z  }{}{\mbb{Z}} % Integer
+\ProvideDocumentCommand{\Q  }{}{\mbb{Q}} % Rational
+\ProvideDocumentCommand{\R  }{}{\mbb{R}} % Real
+\ProvideDocumentCommand{\C  }{}{\mbb{C}} % Complex
+\ProvideDocumentCommand{\K  }{}{\mbb{K}} % Generic
+\ProvideDocumentCommand{\HH }{}{\mbb{H}} % Upper-half plane/Quaternion
+\ProvideDocumentCommand{\del}{}{\partial}
+\ProvideDocumentCommand{\lap}{}{\Delta} % Laplacian
+
+
 
 \newcommand{\1}{\mathbbm1}
-\newcommand{\I}{\mfk i}
+\newcommand{\I}{\mfk i} % Imaginary constant
+%\newcommand{\I}{i} % Imaginary constant
 
 % Classic Groups
 \DeclareMathOperator{\GL}{GL}
@@ -137,13 +170,25 @@
 
 \DeclareMathOperator{\spn}{span}
 
+% The following is a bad idea.
+%\let\oldexp\exp
+%\RenewDocumentCommand{\exp}{s m}{
+  %\IfBooleanTF{#1}
+    %{e^}
+    %{\oldexp}
+  %}
+
 \DeclareMathOperator{\End}{End}
 \DeclareMathOperator{\Aut}{Aut}
 
 \DeclareMathOperator{\F}{\mathbb{F}}
 
-\DeclareMathOperator{\mfld}{\mathbf{Mfld}}
-\DeclareMathOperator{\mfldb}{\mathbf{Mfld}\pmb\del}
+% Categories
+\ProvideDocumentCommand{\catname}{m}{\mathbf{#1}}
+\DeclareMathOperator{\mfld}{\catname{Mfld}}
+\DeclareMathOperator{\mfldb}{\catname{Mfld}\pmb\del}
+\DeclareMathOperator{\vect}{\catname{Vect}}
+\DeclareMathOperator{\Mod}{\catname{Mod}}
 
 \ProvideDocumentCommand{\cN}{}{\mathcal{N}}
 
@@ -189,6 +234,8 @@
 \ProvideDocumentCommand{\Inter} {O{} O{}}{\Operator\bigcap   [#1][#2]}
 \ProvideDocumentCommand{\Int}   {O{} O{}}{\Operator\int      [#1][#2]}
 \ProvideDocumentCommand{\IInt}  {O{} O{}}{\Operator\iint     [#1][#2]}
+\ProvideDocumentCommand{\IIInt} {O{} O{}}{\Operator\iiint    [#1][#2]}
+\ProvideDocumentCommand{\Wedge} {O{} O{}}{\Operator\bigwedge [#1][#2]}
 %\renewcommand<\rightghost
 
 %\ProvideDocumentCommand{\gt}{}{>}
@@ -223,9 +270,41 @@
 % Only show parentheses if an argument is given.
 \ProvideDocumentCommand{\affine}{m O{} O{}}{\mathbb{A}^{#1}#2{#3}}
 
+\newcommand\LambdaFunction[2][0]{%
+\let\tmp\relax
+\newcommand\tmp[#1]{#2}\tmp}
+
+% Single-argument version
+%\newcommand\LambdaFunction[2][0]{%
+%\let\tmp\relax
+%\newcommand\tmp[#1]{#2}\tmp}
+
+% Ellipsis list
+% Arguments are: term, first value, optional last value, operator, ellipsis type
+\ProvideDocumentCommand{\elist}{m m o D,,{,} D..{\dots}}{
+ \IfNoValueTF {#3}
+  {\LambdaFunction[1]{#1}{#2}#4#5}
+  {\LambdaFunction[1]{#1}{#2}#4#5#4\LambdaFunction[1]{#1}{#3}} }
+
+%\ProvideDocumentCommand{\elist}{m m o O{,} O{\dots}}{
+ %\IfNoValueTF {#3}
+  %{\LambdaFunction[1]{#1}{#2}#4#5}
+  %{\LambdaFunction[1]{#1}{#2}#4#5#4\LambdaFunction[1]{#1}{#3}} }
+
+%\ProvideDocumentCommand{\seq}{m O{1}}{\LambdaFunction{#1}}
+
+\DeclareMathOperator{\blo}{\msc{L}}
+\DeclareMathOperator{\residue}{res} % residue
+\DeclareMathOperator{\Arg}{Arg} % Principle part of argument function
+
 \ProvideDocumentCommand{\sethom}{m m}{\mathscr{F}\pn{#1,#2}}
 \ProvideDocumentCommand{\Hom}{O{} m m}
-  {\hom_{#1}\pn{#2,#3}}
+  {\hom_{#1}\pn{#2,#3}} % Don't use this.
+
+\ProvideDocumentCommand{\ob}{O{} m}{\operatorname{Ob}\pn #1{#2}}
+% I want the optional argument to correspond to the sizing option as defined in
+% \pn. But this doesn't work. I kind of hate TeX.
+
 
 %\ProvideDocumentCommand{\CHom}{m} % Category
   %{\operatorname{Hom}\pn{#1}}
@@ -239,18 +318,25 @@
 \ProvideDocumentCommand{\rad}{m}{\sqrt #1}
 %\ProvideDocumentCommand{\radical}{m}{\OperatorName rad{#1}}
 
-%TODO: define \acts for actions
+\DeclareMathOperator{\order}{ord}
 
 \newcommand{\mono}{\rightarrowtail} % monomorphism
-\newcommand{\inc}{\hookrightarrow} % monomorphism
-\newcommand{\epi}{\twoheadrightarrow} % epimorphism
-\newcommand{\st}{\middle\vert} % such that. But it doesn't work right.
+\newcommand{\inc }{\hookrightarrow} % inclusion % DEPRECATE?
+\newcommand{\emb }{\hookrightarrow} % embedding
+\newcommand{\epi }{\twoheadrightarrow} % epimorphism
+\newcommand{\st  }{\middle\vert} % such that. But it doesn't work right.
 
 % Add the restriction notation here.
-\ProvideDocumentCommand{\res}{o m}{
-  \IfNoValueTF {#1}
-  {\left.{#2}\right|}
-  {{#2}|_{#1}}
+\ProvideDocumentCommand{\res}{tb o m}{
+  \IfBooleanTF {#1}
+  { \IfNoValueTF {#2}
+    {{#3}\big |}
+    {{#3}\big |_{#2}}
+  }
+  { \IfNoValueTF {#2}
+    {\left.{#3}\right|}
+    {\left.{#3}\right|_{#2}}
+  }
 }
 
 % Universal Enveloping Algebra
@@ -278,7 +364,8 @@
   %{\mathbb P_{#1}^{#2}} % Version 3
 }
 %\newcommand{\dual}[1]{{#1}^*}
-\ProvideDocumentCommand{\dual}{m}{{#1}^\vee}
+%\ProvideDocumentCommand{\dual}{m}{{#1}^\vee}
+\ProvideDocumentCommand{\dual}{m}{{#1}^*}
 \ProvideDocumentCommand{\transverse}{}{\mathbin{\pitchfork}}
 \ProvideDocumentCommand{\cc}{m}{\overline{#1}}
 %\newcommand{\dual}[1]{{#1}^\vee}
@@ -301,6 +388,10 @@
 \newcommand{\idx}[2]{\left [ #1 : #2 \right ]}
 \DeclareMathOperator{\sgn}{sgn}
 \DeclareMathOperator{\Sym}{Sym}
+
+\ProvideDocumentCommand{\sym}{m}{S_#1} % Symmetric group
+%\ProvideDocumentCommand{\sym}{O{} m}{\Sym\pn #1{#2}} % Symmetric group
+
 %\DeclareMathOperator{\ord}{ord} % Vertical bars
 
 \newcommand{\under}{\backslash}
@@ -313,6 +404,7 @@
 %\newcommand{\iso}{\simeq} % or \cong
 \newcommand{\iso}{\cong} % or \cong
 \newcommand{\homeo}{\cong} % or \cong
+\newcommand{\hty}{\cong} % or \cong
 
 \DeclareMathOperator{\pr}{pr} % projection
 \DeclareMathOperator{\im}{im} % Image
@@ -323,18 +415,24 @@
 % Turn this command into another option for \frac (by renewcommand).
 \newcommand{\fracl}[2]{\left.{#1}\middle/{#2}\right.}
 \newcommand{\e}{\varepsilon}
-\newcommand{\inner}[2]{\left \langle #1, #2 \right \rangle}
+%\newcommand{\inner}[2]{\left \langle #1, #2 \right \rangle}
 %\newcommand{\se}[1]{\left \{ #1 \right \}}
 %\newcommand{\pn}[1]{\mathopen{}\left ( #1 \right )}
 %\newcommand{\bk}[1]{\left[ #1 \right]}
-\ProvideDocumentCommand{\bk}{s tB tb m}{
+\ProvideDocumentCommand{\bk}{s tb tB tg tG m}{
   \IfBooleanTF {#1} % Starred version; no sizing
-    {[#4]}
-    {\IfBooleanTF {#2} % Make Big
-      {\Bigl[#4\Bigr]}
-      {\IfBooleanTF {#3} % Make big
-        {\bigl[#4\bigr]}
-        {\left[#4\right]} % Auto-size
+    {[#6]}
+    {\IfBooleanTF {#2} % Make big
+      {\bigl[#6\bigr]}
+      {\IfBooleanTF {#3} % Make Big
+        {\Bigl[#6\Bigr]}
+        {\IfBooleanTF {#4} % Make bigg
+          {\biggl[#6\biggr]}
+          {\IfBooleanTF {#5} % Make Bigg
+            {\Biggl[#6\Biggr]}
+            {\left[#6\right]} % Auto-size
+          }
+        }
       }
     }
 }
@@ -372,6 +470,24 @@
       }
     }
   \IfNoValueF{#6}{_{#6}}
+}
+%\newcommand{\card}{\#}
+\ProvideDocumentCommand{\card}{s tb tB tg tG m}{
+  \IfBooleanTF {#1} % Starred version; no sizing
+    {\lvert#6\rvert}
+    {\IfBooleanTF {#2} % Make big
+      {\bigl\lvert#6\bigr\rvert}
+      {\IfBooleanTF {#3} % Make Big
+        {\Bigl\lvert#6\Bigr\rvert}
+        {\IfBooleanTF {#4} % Make bigg
+          {\biggl\lvert#6\biggr\rvert}
+          {\IfBooleanTF {#5} % Make Bigg
+            {\Biggl\lvert#6\Biggr\rvert}
+            {\left\lvert#6\right\rvert} % Auto-size
+          }
+        }
+      }
+    }
 }
 \ProvideDocumentCommand{\abs}{s tb tB tg tG m}{
   \IfBooleanTF {#1} % Starred version; no sizing
@@ -426,18 +542,60 @@
   }
 }
 
+\ProvideDocumentCommand{\inner}{s tb tB tg tG m m}{% Inner product
+\IfBooleanTF {#1} % Starred version; no sizing
+  %{(#6, #7)}
+  %{(#6\mid #7)}
+  %{\langle#6\mid #7\rangle}
+  {\langle#6, #7\rangle}
+  {\IfBooleanTF {#2} % Make big
+    %{\bigl(#6,#7\bigr)}
+    %{\bigl(#6\bigm|#7\bigr)}
+    %{\bigl\langle#6\bigm|#7\bigr\rangle}
+    {\bigl\langle#6, #7\bigr\rangle}
+    {\IfBooleanTF {#3} % Make Big
+      %{\Bigl(#6,#7\Bigr)}
+      %{\Bigl(#6\Bigm|#7\Bigr)}
+      %{\Bigl\langle#6\Bigm|#7\Bigr\rangle}
+      {\Bigl\langle#6,#7\Bigr\rangle}
+      {\IfBooleanTF {#4} % Make bigg
+        %{\biggl(#6,#7\biggr)}
+        %{\biggl(#6\biggm|#7\biggr)}
+        %{\biggl\langle#6\biggm|#7\biggr\rangle}
+        {\biggl\langle#6,#7\biggr\rangle}
+        {\IfBooleanTF {#5} % Make Bigg
+          %{\Biggl(#6,#7\Biggr)}
+          %{\Biggl(#6\Biggm|#7\Biggr)}
+          %{\Biggl\langle#6\Biggm|#7\Biggr\rangle}
+          {\Biggl\langle#6,#7\Biggr\rangle}
+          %{\left(#6,#7\right)} % Auto-size
+          %{\left(#6\;\middle|\;#7\right)} % Auto-size
+          %{\left\langle#6\;\middle|\;#7\right\rangle} % Auto-size
+          {\left\langle#6,#7\right\rangle} % Auto-size
+        }
+      }
+    }
+  }
+}
+
 \ProvideDocumentCommand{\setb}{s tb tB tg tG m m}{% Setbuilder
 \IfBooleanTF {#1} % Starred version; no sizing
-  {\{#6\mid #7\}}
+  %{\{#6\mid #7\}}
+  {\{\,#6:#7\,\}}
   {\IfBooleanTF {#2} % Make big
-    {\bigl\{#6\bigm|#7\bigr\}}
+    %{\bigl\{#6\bigm|#7\bigr\}}
+    {\bigl\{\,#6:#7\,\bigr\}}
     {\IfBooleanTF {#3} % Make Big
-      {\Bigl\{#6\Bigm|#7\Bigr\}}
+      %{\Bigl\{#6\Bigm|#7\Bigr\}}
+      {\Bigl\{\,#6:#7\,\Bigr\}}
       {\IfBooleanTF {#4} % Make bigg
-        {\biggl\{#6\biggm|#7\biggr\}}
+        %{\biggl\{#6\biggm|#7\biggr\}}
+        {\biggl\{\,#6:#7\,\biggr\}}
         {\IfBooleanTF {#5} % Make Bigg
-          {\Biggl\{#6\Biggm|#7\Biggr\}}
-          {\left\{#6\;\middle|\;#7\right\}} % Auto-size
+          %{\Biggl\{#6\Biggm|#7\Biggr\}}
+          {\Biggl\{\,#6:#7\,\Biggr\}}
+          %{\left\{#6\;\middle|\;#7\right\}} % Auto-size
+          {\left\{\,#6:#7\,\right\}} % Auto-size
         }
       }
     }
@@ -455,6 +613,10 @@
 \newcommand{\liebk}[2]{\left[ #1,#2 \right]} % Use \leftm,\rightm?
 
 \ProvideDocumentCommand{\borel}{m}{\mathcal{B}_{#1}}
+
+\ProvideDocumentCommand{\ms}{}{\perp} % Mutually singular
+\ProvideDocumentCommand{\abcts}{}{\ll} % Absolutely continuous
+
 %\DeclareMathOperator{\Grass}{Gr} % Grasmannian
 \ProvideDocumentCommand{\eR}{}{\overline{\R}}
 
@@ -468,7 +630,10 @@
   {\fracl{\partial #2}{\partial #3}}
   {\frac {\partial #2}{\partial #3}}
 }
-%\ProvideDocumentCommand{\ppd}[3]{\frac { \partial^{#1}{#2} } {#3} }
+%\ProvideDocumentCommand{\ppd}{}{\frac { \partial^{#1}{#2} } {#3} }
+
+\ProvideDocumentCommand{\cent}{}{Z}      % centre
+%\ProvideDocumentCommand{\cent}{}{\zeta} % centre
 
 \ProvideDocumentCommand{\tounif}{}{\rightrightarrows}
 \ProvideDocumentCommand{\Gr}{m m}{\operatorname{Gr}\pn{#1,#2}}
@@ -477,11 +642,15 @@
 \DeclareMathOperator{\rank}{rk}   % rank
 \DeclareMathOperator{\tr}{tr}     % trace
 \DeclareMathOperator{\Lie}{Lie}   % Lie algebra
+\DeclareMathOperator{\Gal}{Gal}   % Galois group
 \DeclareMathOperator{\Spec}{Spec} % Spectrum
-\DeclareMathOperator*{\esssup}{ess\,sup}
-\DeclareMathOperator*{\supp}{supp}
+\DeclareMathOperator*{\esssup}{ess\,sup} % essential supremum
+\DeclareMathOperator*{\supp}{supp} % support
 
 \newcommand{\cpt}[1]{\overline{#1}} % completion of a space/object
+
+\newcommand{\TVS}{topological vector space}
+\newcommand{\NVS}{normed vector space}
 
 % Basic R^N topology
 
@@ -491,7 +660,6 @@
 \newcommand{\ball}[2]{B_{#1}\left (#2 \right )} % Denotes an open ball centered at #1 with radius #2
 \newcommand{\cball}[2]{\cl{B}_{#1}\left(#2 \right)} % The closed ball
 %\newcommand{\pball}[2]{\dot{B}_{#1}\left(#2 \right )} % The punctured ball
-\newcommand{\card}{\#}
 
 \endinput
 % ex: filetype=tex
