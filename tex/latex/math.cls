@@ -2,14 +2,27 @@
 \ProvidesPackage{math}[2017/10/05 Author: Jesse Frohlich; Custom Style for math
 documents]
 
+% TODO: Clean up this mess of a premable.
+  % todo: go through each package and probe its necessity
+  % todo: reorganize macros into logical groups
+  % todo: reorganize macros into *semantic* and *shorthand*
+  % todo: remove unused or unhelpful macros
+  % todo: simplify code for resized parenthetical statements
+  % todo: learn how to pass options to the article class
+  % todo: expand functionality for the ellipsoidal list command
+
 %\LoadClass[10pt,a4paper]{article}
-\LoadClass[11pt,letterpaper]{article} % Is this what you want? Maybe...
+\LoadClass[11pt]{scrartcl} % Is this what you want? Maybe...
 
 \RequirePackage[utf8]{inputenc}
+
+\RequirePackage{halloweenmath}
 
 \RequirePackage{xparse}              % The way of the future
 \RequirePackage{booktabs}            % For \cmidrule
 \RequirePackage{microtype}           % Make things better.
+\RequirePackage{fancyhdr}
+%\RequirePackage{titling}
 
 \RequirePackage{mathtools}           %  norm/absolute value/cardinality
 % includes amsmath
@@ -106,6 +119,9 @@ documents]
 \theoremstyle{remark}
 \newcounter{caseCounter}[thm] % Reset cases with each claim
 \newtheorem{case}[caseCounter]{Case}
+\newtheorem{subcase}{Case}[caseCounter]
+\renewcommand{\thesubcase}{\alph{subcase}}
+%\numberwithin{subcase}{caseCounter}
 \newtheorem*{claim*}{Claim} % For the middle of proofs.
 % Reset case counters at the beginning of proofs.
 %\usepackage{etoolbox}
@@ -119,7 +135,10 @@ documents]
 \newtheorem{prob}[thm]{Problem}
 \newtheorem*{prob*}{Problem}
 \newtheorem{rem}[thm]{Remark}
+\newtheorem*{rem*}{Remark}
 %\newtheorem{q}[questionCounter]{Exercise}
+
+\ProvideDocumentCommand{\defi}{m}{\emph{#1}} % the Item being DEFined 
 
 \newenvironment{sol}
   {\begin{tcolorbox}[breakable]\begin{solution}}
@@ -146,6 +165,7 @@ documents]
 \ProvideDocumentCommand{\Q  }{}{\mbb{Q}} % Rational
 \ProvideDocumentCommand{\R  }{}{\mbb{R}} % Real
 \ProvideDocumentCommand{\C  }{}{\mbb{C}} % Complex
+\ProvideDocumentCommand{\F  }{}{\mbb{F}} % Finite
 \ProvideDocumentCommand{\K  }{}{\mbb{K}} % Generic
 \ProvideDocumentCommand{\HH }{}{\mbb{H}} % Upper-half plane/Quaternion
 \ProvideDocumentCommand{\del}{}{\partial}
@@ -181,7 +201,6 @@ documents]
 \DeclareMathOperator{\End}{End}
 \DeclareMathOperator{\Aut}{Aut}
 
-\DeclareMathOperator{\F}{\mathbb{F}}
 
 % Categories
 \ProvideDocumentCommand{\catname}{m}{\mathbf{#1}}
@@ -197,7 +216,7 @@ documents]
 \newcommand{\fn}{\mathfrak{n}}
 \newcommand{\fb}{\mathfrak{b}}
 \newcommand{\ghi}{\varphi}
-\newcommand{\A}{\mathcal A}
+%\newcommand{\A}{\mathcal A}
 
 \newcommand*{\diffdchar}{d}
 % or {ⅆ}, or {\mathrm{d}}, or whatever standard you’d like to adhere to
@@ -221,7 +240,7 @@ documents]
     {#1}
 }
 
-%\usepackage{halloween math}
+%\RequirePackage{Halloweenmath}
 % There should really be another argument for what the operator is
 % acting on, but that's a lot more typing I really don't care to do.
 \ProvideDocumentCommand{\Sum}   {O{} O{}}{\Operator\sum      [#1][#2]}
@@ -242,6 +261,7 @@ documents]
 
 \ProvideDocumentCommand{\mute}{m}{}
 
+\newcommand{\ocomp}[1]{#1^\perp}
 \ProvideDocumentCommand{\comp}{o m}{
   \IfNoValueTF {#1}
   % Eventually have this detect if () or {} were used, and
@@ -320,18 +340,82 @@ documents]
 
 \DeclareMathOperator{\order}{ord}
 
-\newcommand{\mono}{\rightarrowtail} % monomorphism
+%\newcommand{\mono}{\rightarrowtail} % monomorphism
+\newcommand{\mono}{\hookrightarrow} % monomorphism
 \newcommand{\inc }{\hookrightarrow} % inclusion % DEPRECATE?
+\newcommand{\inj }{\hookrightarrow} % injection
 \newcommand{\emb }{\hookrightarrow} % embedding
+\newcommand{\sur }{\twoheadrightarrow} % epimorphism
 \newcommand{\epi }{\twoheadrightarrow} % epimorphism
-\newcommand{\st  }{\middle\vert} % such that. But it doesn't work right.
+
+% todo: implement \rsub and \dsub as "maps under the function to"
+% e.g. $y = f(x) \iff x f \rsub y$
 
 % Add the restriction notation here.
-\ProvideDocumentCommand{\res}{tb o m}{
+% Arguments are size, restriction, then a signed restriction argument.
+% This is awful, and the spacing changes from the auto-sizing case to the
+% manual case.
+\ProvideDocumentCommand{\res}{s tb tB tg tG o o m}
+{ \IfBooleanTF {#1} % Starred version; no sizing
+  { \IfNoValueTF {#6}
+    {{#8}|}
+    { \IfNoValueTF {#7}
+      {{#8}|_{#6}}
+      {{#8}|_{#6}^{#7}}
+    }
+  }
+  {\IfBooleanTF {#2} % Make big
+    { \IfNoValueTF {#6}
+      {{#8}\bigr|}
+      { \IfNoValueTF {#7}
+        {{#8}\bigr|_{#6}}
+        {{#8}\bigr|_{#6}^{#7}}
+      }
+    }
+    {\IfBooleanTF {#3} % Make Big
+      { \IfNoValueTF {#6}
+        {{#8}\Bigr|}
+        { \IfNoValueTF {#7}
+          {{#8}\Bigr|_{#6}}
+          {{#8}\Bigr|_{#6}^{#7}}
+        }
+      }
+      {\IfBooleanTF {#4} % Make bigg
+        { \IfNoValueTF {#6}
+          {{#8}\biggr|}
+          { \IfNoValueTF {#7}
+            {{#8}\biggr|_{#6}}
+            {{#8}\biggr|_{#6}^{#7}}
+          }
+        }
+        {\IfBooleanTF {#5} % Make Bigg
+        { \IfNoValueTF {#6}
+          {{#8}\Biggr|}
+          { \IfNoValueTF {#7}
+            {{#8}\Biggr|_{#6}}
+            {{#8}\Biggr|_{#6}^{#7}}
+          }
+        }
+          % Auto-size
+          { \IfNoValueTF {#6}
+            {\left.{#8}\right|}
+            { \IfNoValueTF {#7}
+              {\left.{#8}\right|_{#6}}
+              {\left.{#8}\right|_{#6}^{#7}}
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+% Signed restriction
+\ProvideDocumentCommand{\sres}{tb m m}{
   \IfBooleanTF {#1}
   { \IfNoValueTF {#2}
-    {{#3}\big |}
-    {{#3}\big |_{#2}}
+    {{#3}\bigr|}
+    {{#3}\bigr|_{#2}}
   }
   { \IfNoValueTF {#2}
     {\left.{#3}\right|}
@@ -471,24 +555,25 @@ documents]
     }
   \IfNoValueF{#6}{_{#6}}
 }
-%\newcommand{\card}{\#}
-\ProvideDocumentCommand{\card}{s tb tB tg tG m}{
-  \IfBooleanTF {#1} % Starred version; no sizing
-    {\lvert#6\rvert}
-    {\IfBooleanTF {#2} % Make big
-      {\bigl\lvert#6\bigr\rvert}
-      {\IfBooleanTF {#3} % Make Big
-        {\Bigl\lvert#6\Bigr\rvert}
-        {\IfBooleanTF {#4} % Make bigg
-          {\biggl\lvert#6\biggr\rvert}
-          {\IfBooleanTF {#5} % Make Bigg
-            {\Biggl\lvert#6\Biggr\rvert}
-            {\left\lvert#6\right\rvert} % Auto-size
-          }
-        }
-      }
-    }
-}
+\newcommand{\card}{\#}
+%\ProvideDocumentCommand{\card}{s tb tB tg tG m}{
+  %\IfBooleanTF {#1} % Starred version; no sizing
+    %{\lvert#6\rvert}
+    %{\IfBooleanTF {#2} % Make big
+      %{\bigl\lvert#6\bigr\rvert}
+      %{\IfBooleanTF {#3} % Make Big
+        %{\Bigl\lvert#6\Bigr\rvert}
+        %{\IfBooleanTF {#4} % Make bigg
+          %{\biggl\lvert#6\biggr\rvert}
+          %{\IfBooleanTF {#5} % Make Bigg
+            %{\Biggl\lvert#6\Biggr\rvert}
+            %{\left\lvert#6\right\rvert} % Auto-size
+          %}
+        %}
+      %}
+    %}
+%}
+
 \ProvideDocumentCommand{\abs}{s tb tB tg tG m}{
   \IfBooleanTF {#1} % Starred version; no sizing
     {\lvert#6\rvert}
