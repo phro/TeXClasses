@@ -39,6 +39,8 @@ documents]
 % \RequirePackage{parskip}           % No indent paragraphs.
 
 \RequirePackage{xparse,xpatch}       % The way of the future
+\usepackage{etoolbox}
+
 \RequirePackage{booktabs}            % For \cmidrule
 \RequirePackage{microtype}           % Make things better.
 %\RequirePackage{fancyhdr}
@@ -148,24 +150,6 @@ documents]
 \ProcessOptions\relax
 
 
-\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
-\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
-%\DeclarePairedDelimiter\abs{\lvert}{\rvert}
-\DeclarePairedDelimiter\ord{\lvert}{\rvert}
-\DeclareMathOperator{\Ord}{ord}
-%\DeclarePairedDelimiter\norm{\lVert}{\rVert}
-
-% Swap the definition of \abs* and \norm*, so that \abs
-% and \norm resizes the size of the brackets, and the
-% starred version does not.
-\makeatletter
-%\let\oldabs\abs
-%\def\abs{\@ifstar{\oldabs}{\oldabs*}}
-\let\oldord\ord
-\def\ord{\@ifstar{\oldord}{\oldord*}}
-%\let\oldnorm\norm
-%\def\norm{\@ifstar{\oldnorm}{\oldnorm*}}
-\makeatother
 
 % Remove the undesired spaces introduced when \left and \right are used.
 \let\originalleft\left
@@ -197,15 +181,6 @@ documents]
 \newtheorem*{proposition*}{Proposition}
 \newtheorem*{corollary*}  {Corollary}
 
-% XXX: The following section is DEPRECATED
-% TODO todo fixme xxx
-\newtheorem{thm} [theorem]{Theorem}
-\newtheorem{lem} [theorem]{Lemma}
-\newtheorem{conj}[theorem]{Conjecture}
-\newtheorem{prop}[theorem]{Proposition}
-\newtheorem{cor} [theorem]{Corollary}
-\newtheorem{qn}  [theorem]{Question}
-
 \newtheorem{claim}[theorem]{Claim}
 \newtheorem{fact} [theorem]{Fact}
 \newtheorem{facts}[theorem]{Facts}
@@ -226,7 +201,6 @@ documents]
 %\numberwithin{subcase}{caseCounter}
 \newtheorem*{claim*}{Claim} % For the middle of proofs.
 % Reset case counters at the beginning of proofs.
-%\usepackage{etoolbox}
 \AtBeginEnvironment{proof}{\setcounter{caseCounter}{0}}
 
 \theoremstyle{definition}
@@ -234,9 +208,9 @@ documents]
 \newtheorem*{example}{Example}
 \newtheorem{examples}{Examples}
 \newtheorem{exercise}[theorem]{Exercise}
-% \newtheorem{question}[theorem]{Question}
+\newtheorem{question}[theorem]{Question}
 \newtheorem{answer}[theorem]{Answer}
-% \newtheorem*{question*}{Question}
+\newtheorem*{question*}{Question}
 \newtheorem*{answer*}{Answer}
 \newtheorem{response}[theorem]{Response}
 
@@ -247,19 +221,6 @@ documents]
 \newtheorem{remark}[theorem]{Remark}
 \newtheorem*{remark*}{Remark}
 
-% XXX: The following section is DEPRECATED
-\newtheorem*{defn}{Definition}
-\newtheorem*{eg}{Example}
-\newtheorem{prob}     [theorem]{Problem}
-\newtheorem*{prob*}            {Problem}
-\newtheorem*{rem}{Remark}
-\newtheorem*{rem*}{Remark}
-\newtheorem{egs}[theorem]{Examples}
-\newtheorem{ex}{Examples}
-%\newtheorem{q}[questionCounter]{Exercise}
-
-
-% \renewtheorem command
 \makeatletter
 \def\renewtheorem#1{%
   \expandafter\let\csname#1\endcsname\relax
@@ -295,11 +256,11 @@ documents]
 %\ProvideDocumentCommand{\alev}{}{a.e.\ }
 %\newcommand{\salg}{$\sigma$-algebra}
 
-\newcommand{\mcl}[1]{\mathcal{#1}}
-\newcommand{\mbb}[1]{\mathbb{#1}}
-\newcommand{\mbf}[1]{\boldsymbol{\mathbf{#1}}}
-\newcommand{\msc}[1]{\mathscr{#1}}
-\newcommand{\mfk}[1]{\mathfrak{#1}}
+\ProvideDocumentCommand{\mcl}{m}{\mathcal{#1}}
+\ProvideDocumentCommand{\mbb}{m}{\mathbb{#1}}
+\ProvideDocumentCommand{\mbf}{m}{\boldsymbol{\mathbf{#1}}}
+\ProvideDocumentCommand{\msc}{m}{\mathscr{#1}}
+\ProvideDocumentCommand{\mfk}{m}{\mathfrak{#1}}
 \ProvideDocumentCommand{\mit}{m}{\mathit{#1}}
 
 % Standard number sets.
@@ -340,7 +301,7 @@ documents]
 \DeclareMathOperator{\SU}{SU}
 \DeclareMathOperator{\Or}{O}
 \DeclareMathOperator{\So}{\mfk{so}}
-\DeclareMathOperator{\g}{\mfk{g}} 
+\DeclareMathOperator{\g}{\mfk{g}}
 
 
 \ProvideDocumentCommand{\abelianization}{m}{{#1}^{\mbf{ab}}}
@@ -376,6 +337,23 @@ m          % manifold
 }{H_{\text{dR}}^{#1}(#2)}
 
 \ProvideDocumentCommand{\canoniso}{m}{{#1}^\sharp}
+
+% Combinatorics
+
+% Cyclic Stirling Numbers (i.e. of the first kind)
+\newcommand{\genstircyc}[3]{%
+  \genfrac{[}{]}{0pt}{#1}{#2}{#3}%
+}
+% Set Stirling Numbers (i.e. of the second kind)
+\newcommand{\genstirset}[3]{%
+  \genfrac{\{}{\}}{0pt}{#1}{#2}{#3}%
+}
+\newcommand{\stircyc}[2]{\genstircyc{}{#1}{#2}}
+\newcommand{\dstircyc}[2]{\genstircyc{0}{#1}{#2}}
+\newcommand{\tstircyc}[2]{\genstircyc{1}{#1}{#2}}
+\newcommand{\stirset}[2]{\genstirset{}{#1}{#2}}
+\newcommand{\dstirset}[2]{\genstirset{0}{#1}{#2}}
+\newcommand{\tstirset}[2]{\genstirset{1}{#1}{#2}}
 
 
 \makeatletter
@@ -688,9 +666,10 @@ m          % manifold
 }
 
 % Universal Enveloping Algebra
-\ProvideDocumentCommand{\uea}{m}{\mathfrak{U}\pn{#1}}
+\ProvideDocumentCommand{\uea}{O{}m}{\mathfrak{U}_{#1}\pn{#2}}
 % \ProvideDocumentCommand{\uea}{m}{\mcl{U}\pn{#1}}
 %\newcommand{\id}[1][]{\operatorname{id}_{#1}}
+
 \ProvideDocumentCommand{\id}{o}{
   \IfNoValueTF {#1}
     {\operatorname{id}}
@@ -786,369 +765,71 @@ m          % manifold
 \DeclareMathOperator{\upto}{\nearrow} % conv. monotonically to (upwards)
 \DeclareMathOperator{\downto}{\searrow} % conv. monotonically to (down)
 
+% just to make sure it exists
+\providecommand\given{}
+% can be useful to refer to this outside \Set
+\ProvideDocumentCommand{\innerspacing}{}{\mathchoice{\:}{\:}{\,}{\,}}
+\newcommand\SetSymbol[1][]{%
+  \innerspacing%
+  %:%
+  #1\vert%
+  \allowbreak\innerspacing\mathopen{}%
+}
+\newcommand\PairSymbol[2][]{%
+  \nonscript\, #1 #2 \allowbreak\nonscript\,\mathopen{}%
+}
 % Turn this command into another option for \frac (by renewcommand).
 \newcommand{\fracl}[2]{\left.{#1}\middle/{#2}\right.}
 \newcommand{\e}{\varepsilon}
 %\newcommand{ϵ}{\epsilon}
-%\newcommand{\inner}[2]{\left \langle #1, #2 \right \rangle}
-%\newcommand{\se}[1]{\left \{ #1 \right \}}
-%\newcommand{\pn}[1]{\mathopen{}\left ( #1 \right )}
-%\newcommand{\bk}[1]{\left[ #1 \right]}
-\ProvideDocumentCommand{\commutator}{s tb tB tg tG m m}{
-  \IfBooleanTF {#1} % Starred version; no sizing
-    {[#6,#7]}
-    {\IfBooleanTF {#2} % Make big
-      {\bigl[#6,#7\bigr]}
-      {\IfBooleanTF {#3} % Make Big
-        {\Bigl[#6,#7\Bigr]}
-        {\IfBooleanTF {#4} % Make bigg
-          {\biggl[#6,#7\biggr]}
-          {\IfBooleanTF {#5} % Make Bigg
-            {\Biggl[#6,#7\Biggr]}
-            {\left[#6,#7\right]} % Auto-size
-          }
-        }
-      }
-    }
-}
-\ProvideDocumentCommand{\liebk}{s tb tB tg tG m m}{
-  \IfBooleanTF {#1} % Starred version; no sizing
-    {[#6,#7]}
-    {\IfBooleanTF {#2} % Make big
-      {\bigl[#6,#7\bigr]}
-      {\IfBooleanTF {#3} % Make Big
-        {\Bigl[#6,#7\Bigr]}
-        {\IfBooleanTF {#4} % Make bigg
-          {\biggl[#6,#7\biggr]}
-          {\IfBooleanTF {#5} % Make Bigg
-            {\Biggl[#6,#7\Biggr]}
-            {\left[#6,#7\right]} % Auto-size
-          }
-        }
-      }
-    }
+
+%% Paired Delimiters %%
+
+\ProvideDocumentCommand{\curry}{m}{\ifblank{#1}{\:\cdot\:}{#1}}
+
+\DeclarePairedDelimiter{\set}\{\}
+\DeclarePairedDelimiterX{\setbuilder}[2]\{\}{\,#1\SetSymbol[\delimsize]#2\,}
+
+\DeclarePairedDelimiterX{\commutator}[2]{[}{]}{\curry{#1}, \curry{#2}}
+\DeclarePairedDelimiterX{\liebk}[2]{[}{]}{\curry{#1}, \curry{#2}}
+\DeclarePairedDelimiter{\bkk}\llbracket\rrbracket
+\DeclarePairedDelimiter{\bk}\lbrack\rbrack
+\DeclarePairedDelimiter{\pn}\lparen\rparen
+
+\DeclarePairedDelimiterXPP{\normHelper}[2]{}\lVert\rVert{\IfNoValueTF{#1}{}{_{#1}}}{\curry{#2}}
+\ProvideDocumentCommand{\norm}{s O{} m o}{% Optional subscript token at the end.
+  \IfBooleanTF{#1}
+    {\normHelper*{#4}{#3}}
+    {\normHelper[#2]{#4}{#3}}
 }
 
-% \ProvideDocumentCommand{\brackettest}{s tb tB tg tG m}{
-  % \IfBooleanTF {#1} % Starred version; no sizing
-    % {
-      % \def\leftsize
-      % \def\rightsize
-    % }
-    % {\IfBooleanTF {#2} % Make big
-      % {}
-      % {\IfBooleanTF {#3} % Make Big
-        % {}
-        % {\IfBooleanTF {#4} % Make bigg
-          % {}
-          % {\IfBooleanTF {#5} % Make Bigg
-            % {}
-            % {} % Auto-size
-          % }
-        % }
-      % }
-    % }
-% }
-
-\ProvideDocumentCommand{\bkk}{s tb tB tg tG m}{
-  \IfBooleanTF {#1} % Starred version; no sizing
-    {\llbracket#6\rrbracket}
-    {\IfBooleanTF {#2} % Make big
-      {\bigl\llbracket#6\bigr\rrbracket}
-      {\IfBooleanTF {#3} % Make Big
-        {\Bigl\llbracket#6\Bigr\rrbracket}
-        {\IfBooleanTF {#4} % Make bigg
-          {\biggl\llbracket#6\biggr\rrbracket}
-          {\IfBooleanTF {#5} % Make Bigg
-            {\Biggl\llbracket#6\Biggr\rrbracket}
-            {\left\llbracket#6\right\rrbracket} % Auto-size
-          }
-        }
-      }
-    }
+\DeclarePairedDelimiterXPP{\absHelper}[2]{}\lvert\rvert{\IfNoValueTF{#1}{}{_{#1}}}{\curry{#2}}
+\ProvideDocumentCommand{\abs}{s O{} m o}{% Optional subscript token at the end.
+  \IfBooleanTF{#1}
+    {\absHelper*{#4}{#3}}
+    {\absHelper[#2]{#4}{#3}}
 }
 
-\ProvideDocumentCommand{\bk}{s tb tB tg tG m}{
-  \IfBooleanTF {#1} % Starred version; no sizing
-    {[#6]}
-    {\IfBooleanTF {#2} % Make big
-      {\bigl[#6\bigr]}
-      {\IfBooleanTF {#3} % Make Big
-        {\Bigl[#6\Bigr]}
-        {\IfBooleanTF {#4} % Make bigg
-          {\biggl[#6\biggr]}
-          {\IfBooleanTF {#5} % Make Bigg
-            {\Biggl[#6\Biggr]}
-            {\left[#6\right]} % Auto-size
-          }
-        }
-      }
-    }
-}
-\ProvideDocumentCommand{\pn}{s tb tB tg tG m}{
-  \IfBooleanTF {#1} % Starred version; no sizing
-    {(#6)}
-    {\IfBooleanTF {#2} % Make big
-      {\bigl(#6\bigr)}
-      {\IfBooleanTF {#3} % Make Big
-        {\Bigl(#6\Bigr)}
-        {\IfBooleanTF {#4} % Make bigg
-          {\biggl(#6\biggr)}
-          {\IfBooleanTF {#5} % Make Bigg
-            {\Biggl(#6\Biggr)}
-            {\left(#6\right)} % Auto-size
-          }
-        }
-      }
-    }
-}
-\ProvideDocumentCommand{\norm}{s tb tB tg tG o m}{ % add optional subscript argument
-  \IfBooleanTF {#1} % Starred version; no sizing
-    {\lVert#7\rVert}
-    {\IfBooleanTF {#2} % Make big
-      {\bigl\lVert#7\bigr\rVert}
-      {\IfBooleanTF {#3} % Make Big
-        {\Bigl\lVert#7\Bigr\rVert}
-        {\IfBooleanTF {#4} % Make bigg
-          {\biggl\lVert#7\biggr\rVert}
-          {\IfBooleanTF {#5} % Make Bigg
-            {\Biggl\lVert#7\Biggr\rVert}
-            {\left\lVert#7\right\rVert} % Auto-size
-          }
-        }
-      }
-    }
-  \IfNoValueF{#6}{_{#6}}
-}
-% \newcommand{\card}{\#}
-\ProvideDocumentCommand{\card}{s tb tB tg tG m}{
-  \IfBooleanTF {#1} % Starred version; no sizing
-    {\lvert#6\rvert}
-    {\IfBooleanTF {#2} % Make big
-      {\bigl\lvert#6\bigr\rvert}
-      {\IfBooleanTF {#3} % Make Big
-        {\Bigl\lvert#6\Bigr\rvert}
-        {\IfBooleanTF {#4} % Make bigg
-          {\biggl\lvert#6\biggr\rvert}
-          {\IfBooleanTF {#5} % Make Bigg
-            {\Biggl\lvert#6\Biggr\rvert}
-            {\left\lvert#6\right\rvert} % Auto-size
-          }
-        }
-      }
-    }
-}
+\DeclarePairedDelimiterX{\card}[1]\lvert\rvert{\curry{#1}}
+% \ProvideDocumentCommand{\card}{\#}
 
-\ProvideDocumentCommand{\abs}{s tb tB tg tG o m}{
-  \IfBooleanTF {#1} % Starred version; no sizing
-    {\lvert#7\rvert}
-    {\IfBooleanTF {#2} % Make big
-      {\bigl\lvert#7\bigr\rvert}
-      {\IfBooleanTF {#3} % Make Big
-        {\Bigl\lvert#7\Bigr\rvert}
-        {\IfBooleanTF {#4} % Make bigg
-          {\biggl\lvert#7\biggr\rvert}
-          {\IfBooleanTF {#5} % Make Bigg
-            {\Biggl\lvert#7\Biggr\rvert}
-            {\left\lvert#7\right\rvert} % Auto-size
-          }
-        }
-      }
-    }
-    \IfNoValueF{#6}{_{#6}}
-}
+\DeclarePairedDelimiterX\ceil [1]{\lceil}{\rceil}{\curry{#1}}
+\DeclarePairedDelimiterX\floor[1]{\lfloor}{\rfloor}{\curry{#1}}
+
+\DeclarePairedDelimiterX\ord  [1]{\lvert}{\rvert}{\curry{#1}}
+\DeclareMathOperator{\Ord}{ord}
+
 % Used for generating sets.
-\ProvideDocumentCommand{\gen}{s tb tB tg tG m}{
-  \IfBooleanTF {#1} % Starred version; no sizing
-    {\langle#6\rangle}
-    {\IfBooleanTF {#2} % Make big
-      {\bigl\langle#6\bigr\rangle}
-      {\IfBooleanTF {#3} % Make Big
-        {\Bigl\langle#6\Bigr\rangle}
-        {\IfBooleanTF {#4} % Make bigg
-          {\biggl\langle#6\biggr\rangle}
-          {\IfBooleanTF {#5} % Make Bigg
-            {\Biggl\langle#6\Biggr\rangle}
-            {\left\langle#6\right\rangle} % Auto-size
-          }
-        }
-      }
-    }
-}
-\ProvideDocumentCommand{\genbuilder}{s tb tB tg tG m m}{
-\IfBooleanTF {#1} % Starred version; no sizing
-  % {\{\,#6\mid #7\,\}}
-  {\langle\,#6:#7\,\rangle}
-  {\IfBooleanTF {#2} % Make big
-    % {\bigl\langle\,#6\bigm|#7\,\bigr\rangle}
-    {\bigl\langle\,#6:#7\,\bigr\rangle}
-    {\IfBooleanTF {#3} % Make Big
-      % {\Bigl\langle\,#6\Bigm|#7\,\Bigr\rangle}
-      {\Bigl\langle\,#6:#7\,\Bigr\rangle}
-      {\IfBooleanTF {#4} % Make bigg
-        % {\biggl\langle\,#6\biggm|#7\,\biggr\rangle}
-        {\biggl\langle\,#6:#7\,\biggr\rangle}
-        {\IfBooleanTF {#5} % Make Bigg
-          % {\Biggl\langle\,#6\Biggm|#7\,\Biggr\rangle}
-          {\Biggl\langle\,#6:#7\,\Biggr\rangle}
-          % {\left\langle\,#6\;\middle|\;#7\,\right\rangle} % Auto-size
-          {\left\langle\,#6:#7\,\right\rangle} % Auto-size
-        }
-      }
-    }
-  }
-}
-\ProvideDocumentCommand{\set}{s tb tB tg tG m}{
-\IfBooleanTF {#1} % Starred version; no sizing
-  {\{#6\}}
-  {\IfBooleanTF {#2} % Make big
-    {\bigl\{#6\bigr\}}
-    {\IfBooleanTF {#3} % Make Big
-      {\Bigl\{#6\Bigr\}}
-      {\IfBooleanTF {#4} % Make bigg
-        {\biggl\{#6\biggr\}}
-        {\IfBooleanTF {#5} % Make Bigg
-          {\Biggl\{#6\Biggr\}}
-          {\left\{#6\right\}} % Auto-size
-        }
-      }
-    }
-  }
-}
+\DeclarePairedDelimiter{\gen}\langle\rangle
+\DeclarePairedDelimiterX{\genbuilder}[2]\langle\rangle{\,#1\SetSymbol[\delimsize]#2\,}
+\newcommand{\grppres}{\genbuilder}
 
-\ProvideDocumentCommand{\pair}{s tb tB tg tG m m}{% Pairing
-% \DeclareMathSymbol{\leftsymbol}{\langle}
-% \DeclareMathSymbol{\rightsymbol}{\langle}
-\IfBooleanTF {#1} % Starred version; no sizing
-  %{(#6, #7)}
-  %{(#6\mid #7)}
-  {\langle#6\mid #7\rangle}
-  % {\langle#6, #7\rangle}
-  {\IfBooleanTF {#2} % Make big
-    %{\bigl(#6,#7\bigr)}
-    % {\bigl(#6\bigm|#7\bigr)}
-    {\bigl\langle#6\bigm|#7\bigr\rangle}
-    % {\bigl\langle#6, #7\bigr\rangle}
-    {\IfBooleanTF {#3} % Make Big
-      %{\Bigl(#6,#7\Bigr)}
-      %{\Bigl(#6\Bigm|#7\Bigr)}
-      {\Bigl\langle#6\Bigm|#7\Bigr\rangle}
-      % {\Bigl\langle#6,#7\Bigr\rangle}
-      {\IfBooleanTF {#4} % Make bigg
-        %{\biggl(#6,#7\biggr)}
-        %{\biggl(#6\biggm|#7\biggr)}
-        {\biggl\langle#6\biggm|#7\biggr\rangle}
-        % {\biggl\langle#6,#7\biggr\rangle}
-        {\IfBooleanTF {#5} % Make Bigg
-          %{\Biggl(#6,#7\Biggr)}
-          %{\Biggl(#6\Biggm|#7\Biggr)}
-          {\Biggl\langle#6\Biggm|#7\Biggr\rangle}
-          % {\Biggl\langle#6,#7\Biggr\rangle}
-          %{\left(#6,#7\right)} % Auto-size
-          % {\left(#6\;\middle|\;#7\right)} % Auto-size
-          {\left\langle#6\;\middle|\;#7\right\rangle} % Auto-size
-          % {\left\langle#6,#7\right\rangle} % Auto-size
-        }
-      }
-    }
-  }
+\DeclarePairedDelimiterX{\pair}[2]\langle\rangle{%
+  \nonscript\,\curry{#1}\PairSymbol[\delimsize]{\vert}\curry{#2}\nonscript\,%
 }
-\ProvideDocumentCommand{\inner}{s tb tB tg tG m m}{% Inner product
-% \DeclareMathSymbol{\leftsymbol}{\langle}
-% \DeclareMathSymbol{\rightsymbol}{\langle}
-\IfBooleanTF {#1} % Starred version; no sizing
-  %{(#6, #7)}
-  %{(#6\mid #7)}
-  {\langle#6\mid #7\rangle}
-  % {\langle#6, #7\rangle}
-  {\IfBooleanTF {#2} % Make big
-    %{\bigl(#6,#7\bigr)}
-    % {\bigl(#6\bigm|#7\bigr)}
-    {\bigl\langle#6\bigm|#7\bigr\rangle}
-    % {\bigl\langle#6, #7\bigr\rangle}
-    {\IfBooleanTF {#3} % Make Big
-      %{\Bigl(#6,#7\Bigr)}
-      %{\Bigl(#6\Bigm|#7\Bigr)}
-      {\Bigl\langle#6\Bigm|#7\Bigr\rangle}
-      % {\Bigl\langle#6,#7\Bigr\rangle}
-      {\IfBooleanTF {#4} % Make bigg
-        %{\biggl(#6,#7\biggr)}
-        %{\biggl(#6\biggm|#7\biggr)}
-        {\biggl\langle#6\biggm|#7\biggr\rangle}
-        % {\biggl\langle#6,#7\biggr\rangle}
-        {\IfBooleanTF {#5} % Make Bigg
-          %{\Biggl(#6,#7\Biggr)}
-          %{\Biggl(#6\Biggm|#7\Biggr)}
-          {\Biggl\langle#6\Biggm|#7\Biggr\rangle}
-          % {\Biggl\langle#6,#7\Biggr\rangle}
-          %{\left(#6,#7\right)} % Auto-size
-          % {\left(#6\;\middle|\;#7\right)} % Auto-size
-          {\left\langle#6\;\middle|\;#7\right\rangle} % Auto-size
-          % {\left\langle#6,#7\right\rangle} % Auto-size
-        }
-      }
-    }
-  }
+\DeclarePairedDelimiterX{\inner}[2]\langle\rangle{%
+  \nonscript\,\curry{#1}\PairSymbol[\delimsize]{,}\curry{#2}\nonscript\,%
 }
-
-\ProvideDocumentCommand{\setbuilder}{s tb tB tg tG m m}{% Setbuilder
-\IfBooleanTF {#1} % Starred version; no sizing
-  % {\{\,#6\mid #7\,\}}
-  {\{\,#6:#7\,\}}
-  {\IfBooleanTF {#2} % Make big
-    % {\bigl\{\,#6\bigm|#7\,\bigr\}}
-    {\bigl\{\,#6:#7\,\bigr\}}
-    {\IfBooleanTF {#3} % Make Big
-      % {\Bigl\{\,#6\Bigm|#7\,\Bigr\}}
-      {\Bigl\{\,#6:#7\,\Bigr\}}
-      {\IfBooleanTF {#4} % Make bigg
-        % {\biggl\{\,#6\biggm|#7\,\biggr\}}
-        {\biggl\{\,#6:#7\,\biggr\}}
-        {\IfBooleanTF {#5} % Make Bigg
-          % {\Biggl\{\,#6\Biggm|#7\,\Biggr\}}
-          {\Biggl\{\,#6:#7\,\Biggr\}}
-          % {\left\{\,#6\;\middle|\;#7\,\right\}} % Auto-size
-          {\left\{\,#6:#7\,\right\}} % Auto-size
-        }
-      }
-    }
-  }
-}
-
-% XXX DEPRECATED
-\ProvideDocumentCommand{\setb}{s tb tB tg tG m m}{% Setbuilder
-\IfBooleanTF {#1} % Starred version; no sizing
-  {\{\,#6\mid #7\,\}}
-  %{\{\,#6:#7\,\}}
-  {\IfBooleanTF {#2} % Make big
-    {\bigl\{\,#6\bigm|#7\,\bigr\}}
-    %{\bigl\{\,#6:#7\,\bigr\}}
-    {\IfBooleanTF {#3} % Make Big
-      {\Bigl\{\,#6\Bigm|#7\,\Bigr\}}
-      %{\Bigl\{\,#6:#7\,\Bigr\}}
-      {\IfBooleanTF {#4} % Make bigg
-        {\biggl\{\,#6\biggm|#7\,\biggr\}}
-        %{\biggl\{\,#6:#7\,\biggr\}}
-        {\IfBooleanTF {#5} % Make Bigg
-          {\Biggl\{\,#6\Biggm|#7\,\Biggr\}}
-          %{\Biggl\{\,#6:#7\,\Biggr\}}
-          {\left\{\,#6\;\middle|\;#7\,\right\}} % Auto-size
-          %{\left\{\,#6:#7\,\right\}} % Auto-size
-        }
-      }
-    }
-  }
-}
-% Why doesn't this work? Why is TeX so ugly?
-%\ProvideDocumentCommand{\pn}{s e{bBgG} m}{
-  %\IfValue {#1} {(#6)}
-  %\IfValue {#2} {\bigl(#6\bigr)}
-  %\IfValue {#3} {\Bigl(#6\Bigr)}
-  %\IfValue {#4} {\biggl(#6\biggr)}
-  %\IfValue {#5} {\Biggl(#6\Biggr)}
-%}
-
-%\newcommand{\liebk}[2]{\left[ #1,#2 \right]} % Use \leftm,\rightm?
 
 % Measure theory
 \ProvideDocumentCommand{\borel}{m}{\mathcal{B}_{#1}}
@@ -1187,13 +868,13 @@ m          % manifold
 \newcommand{\mult}{m}              % multiplication
 \newcommand{\comult}{\Delta}       % comultiplication
 \ProvideDocumentCommand{\cmf}{mm}  % comultiplication factor
-  {#2_{(#1)}}          
+  {#2_{(#1)}}
 
 \newcommand{\antipode}{S}          % antipode
 \ProvideDocumentCommand{\bap}{m}   % bar-antipode
-  {\overline{#1}}       
+  {\overline{#1}}
 \ProvideDocumentCommand{\baap}{m}  % bar-inverse(i.e. anti)-antipode
-  {\underline{#1}}     
+  {\underline{#1}}
 
 \newcommand{\rmat}{r}         % Lie-algebraic r-matrix
 
@@ -1229,8 +910,8 @@ m          % manifold
 \DeclareMathOperator{\codim}{codim}     % codimension
 \DeclareMathOperator{\nullity}{nullity} % nullity
 \DeclareMathOperator{\rank}{rank}       % rank
-\DeclareMathOperator{\trace}{Tr}        % trace
-\DeclareMathOperator{\tr}{Tr}           % trace %XXX DEPRECATED
+\DeclareMathOperator{\trace}{tr}        % trace
+\DeclareMathOperator{\tr}{\PackageWarning{This function is deprecated.}tr}           % trace %XXX DEPRECATED
 
 % Extend matrices to include vertical bars. Example
 % \begin{bmatrix}[cc|c]
@@ -1322,27 +1003,7 @@ m   % direction of derivative
 %}
 \DeclareMathOperator{\Ricci}{Ric}
 
-\ProvideDocumentCommand{\curvature}{s tb tB tg tG m m m m}{% Curvature tensor
-\IfBooleanTF {#1} % Starred version; no sizing
-  {(#6, #7, #8, #9)}
-  {\IfBooleanTF {#2} % Make big
-    {\bigl(#6,#7, #8, #9\bigr)}
-    {\IfBooleanTF {#3} % Make Big
-      {\Bigl(#6,#7, #8, #9\Bigr)}
-      {\IfBooleanTF {#4} % Make bigg
-        {\biggl(#6,#7, #8, #9\biggr)}
-        {\IfBooleanTF {#5} % Make Bigg
-          {\Biggl(#6,#7, #8, #9\Biggr)}
-          {\left(#6,#7, #8, #9\right)} % Auto-size
-        }
-      }
-    }
-  }
-}
-
-
-% XXX DEPRECATED
-\ProvideDocumentCommand{\conn}{m}{\nabla_{#1}} % Levi-Civita connection
+\DeclarePairedDelimiterX{\curvature}[4]\lparen\rparen{#1, #2, #3, #4}
 
 \DeclareMathOperator{\divergence}{div}
 \DeclareMathOperator{\gradient}{grad}
@@ -1358,9 +1019,6 @@ m   % direction of derivative
   }
 }
 
-% XXX DEPRECATED
-\ProvideDocumentCommand{\Chris}{m m}{Γ^{#1}_{#2}} % Christoffel symbols
-
 \ProvideDocumentCommand{\Christoffel}{m m}{Γ^{#1}_{#2}} % Christoffel symbols
 \ProvideDocumentCommand{\vectorfield}{}{\mfk X} % Vector fields
 \ProvideDocumentCommand{\vfield}{}{\mfk X} % Vector fields
@@ -1370,8 +1028,10 @@ m   % direction of derivative
 
 %\ProvideDocumentCommand{\ppd}{}{\frac { \partial^{#1}{#2} } {#3} }
 
-\ProvideDocumentCommand{\centre}{}{Z}      % centre
-%\ProvideDocumentCommand{\cent}{}{\zeta} % centre
+\ProvideDocumentCommand{\centre}{}{%
+  Z
+  % ζ
+}
 
 \ProvideDocumentCommand{\tounif}{}{\rightrightarrows}
 \ProvideDocumentCommand{\Gr}{m m}{\operatorname{Gr}\pn{#1,#2}}
@@ -1427,25 +1087,6 @@ m   % direction of derivative
 \ProvideDocumentCommand{\htygroup}{m}{π_{#1}}
 \ProvideDocumentCommand{\fundgroup}{}{\htygroup{1}}
 
-\ProvideDocumentCommand{\grppres}{s tb tB tg tG m m}{% Group presentation
-% \DeclareMathSymbol{\leftsymbol}{\langle}
-% \DeclareMathSymbol{\rightsymbol}{\langle}
-\IfBooleanTF {#1} % Starred version; no sizing
-  {\langle#6\mid #7\rangle}
-  {\IfBooleanTF {#2} % Make big
-    {\bigl\langle#6\bigm|#7\bigr\rangle}
-    {\IfBooleanTF {#3} % Make Big
-      {\Bigl\langle#6\Bigm|#7\Bigr\rangle}
-      {\IfBooleanTF {#4} % Make bigg
-        {\biggl\langle#6\biggm|#7\biggr\rangle}
-        {\IfBooleanTF {#5} % Make Bigg
-          {\Biggl\langle#6\Biggm|#7\Biggr\rangle}
-          {\left\langle#6\;\middle|\;#7\right\rangle} % Auto-size
-        }
-      }
-    }
-  }
-}
 
 % Basic R^N topology
 
